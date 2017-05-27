@@ -1,0 +1,28 @@
+{
+  "name": "quero_estudobot",
+  "version": "1.0.0",
+  "description": "Telegram bot for students",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sHilgert/quero_estudobot.git"
+  },
+  "keywords": [
+    "student",
+    "bot"
+  ],
+  "author": "Sergio Hilgert Junior",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sHilgert/quero_estudobotissues"
+  },
+  "homepage": "https://github.com/sHilgert/quero_estudobot#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "mongoose": "^4.8.6",
+    "node-telegram-bot-api": "^0.27.0"
+  }
+}
