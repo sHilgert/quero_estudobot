@@ -198,9 +198,8 @@ bot.onText(/\/ping/, (msg, match) => {
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, "tentando pingar o servidor...");
   var options = {
-    host: '192.168.21.229',
-    port: 9000,
-    path: '/ping'
+    host: 'http://05793a9a.ngrok.io',
+    path: '/app/ping'
   };
   
   http.get(options, function(resp){
