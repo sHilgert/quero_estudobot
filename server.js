@@ -1,4 +1,5 @@
 "use strict";
+var http = require('http');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 
@@ -195,8 +196,21 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 
 bot.onText(/\/ping/, (msg, match) => {
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId, "pingando o servidor");
+  bot.sendMessage(chatId, "tentando pingar o servidor...");
+  var options = {
+    host: '192.168.21.229',
+    port: 9000,
+    path: '/ping'
+  };
   
+  http.get(options, function(resp){
+    resp.on('data', function(chunk){
+      bot.sendMessage(chatId, "deu certo: " + chunk);
+    });
+  }).on("error", function(e){
+    bot.sendMessage(chatId, "deu erro: "+ e.message);
+    console.log("Got error: " + e.message);
+  });
 });
 
 bot.on('message', (msg) => {
