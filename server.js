@@ -199,18 +199,28 @@ bot.onText(/\/ping/, (msg, match) => {
   bot.sendMessage(chatId, "tentando pingar o servidor...");
   var options = {
     host: 'http://9385428b.ngrok.io',
-    port: 9000,
-    path: '/app/ping'
+    path: '/app/ping',
+    method: 'GET'
   };
   
-  http.get(options, function(resp){
-    console.log(resp);
-    resp.on('data', function(chunk){
-      bot.sendMessage(chatId, "deu certo: " + chunk);
-    });
-  }).on("error", function(e){
-    bot.sendMessage(chatId, "deu erro: "+ e.message);
-    console.log("Got error: " + e.message);
+  var req = http.get(options, function(res) {
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
+  
+    // Buffer the body entirely for processing as a whole.
+    var bodyChunks = [];
+    res.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyChunks.push(chunk);
+    }).on('end', function() {
+      var body = Buffer.concat(bodyChunks);
+      console.log('BODY: ' + body);
+      // ...and/or process the entire body here.
+    })
+  });
+  
+  req.on('error', function(e) {
+    console.log('ERROR: ' + e.message);
   });
 });
 
