@@ -26,6 +26,12 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
   bot.sendMessage(chatId, resp);
 });
 
+bot.onText(/\/ping /, (msg, match) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, "pingando o servidor");
+  
+});
+
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, 'Received your message');

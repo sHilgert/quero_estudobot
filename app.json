@@ -1,6 +1,6 @@
 {
   "name": "Quero Estudo Bot",
   "description": "A telegram nodejs bot, designed to help students",
-  "repository": "https://github.com/sHilgert/student_drivebot",
+  "repository": "https://github.com/sHilgert/quero_estudobot",
   "keywords": ["node", "bot", "telegram"]
 }
