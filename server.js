@@ -203,6 +203,7 @@ bot.onText(/\/ping/, (msg, match) => {
   };
   
   http.get(options, function(resp){
+    console.log(resp);
     resp.on('data', function(chunk){
       bot.sendMessage(chatId, "deu certo: " + chunk);
     });
