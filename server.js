@@ -249,9 +249,41 @@ bot.on('callback_query', function(msg) {
             link.dislike.users.push(userId);
             console.log("ENTROU 5 >>> " + JSON.stringify(link));
             replyInlineButton(bot, link, msg);  
-
+            
+            console.log("ENTROU NO DISLIKE ENVIO DE LINKS " + msg);
+          var temp = {};
+          temp['chatId'] = msg.chat.id;
+          temp['messageId'] = msg.message_id;
+          temp['member'] = msg.from;
+          temp['name'] = msg.from.first_name,
+          temp['link'] = link.link;
+          temp['like'] = link.like.count;
+          temp['dislike'] = link.dislike.count;
+        
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/link",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
+        
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
+            
             bot.answerCallbackQuery(msg.id, 
             'Voce descurtiu o link do' + user.first_name);
+            
           }else{
             link.like.count--;
             var index = link.like.users.indexOf(userId);
@@ -259,7 +291,39 @@ bot.on('callback_query', function(msg) {
             
             link.dislike.count++;
             link.dislike.users.push(userId);
-            replyInlineButton(bot, link, msg);  
+            replyInlineButton(bot, link, msg);
+            
+             
+            console.log("ENTROU NO DISLIKE 2 ENVIO DE LINKS " + msg);
+          var temp = {};
+          temp['chatId'] = msg.chat.id;
+          temp['messageId'] = msg.message_id;
+          temp['member'] = msg.from;
+          temp['name'] = msg.from.first_name,
+          temp['link'] = link.link;
+          temp['like'] = link.like.count;
+          temp['dislike'] = link.dislike.count;
+        
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/link",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
+        
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
 
             bot.answerCallbackQuery(msg.id, 
             'Voce descurtiu o link do' + user.first_name);
@@ -278,7 +342,38 @@ bot.on('callback_query', function(msg) {
             link.like.count++;
             link.like.users.push(userId);
             
-            replyInlineButton(bot, link, msg);  
+            replyInlineButton(bot, link, msg);
+             
+            console.log("ENTROU NO LIKE ENVIO DE LINKS " + msg);
+          var temp = {};
+          temp['chatId'] = msg.chat.id;
+          temp['messageId'] = msg.message_id;
+          temp['member'] = msg.from;
+          temp['name'] = msg.from.first_name,
+          temp['link'] = link.link;
+          temp['like'] = link.like.count;
+          temp['dislike'] = link.dislike.count;
+        
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/link",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
+        
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
 
             bot.answerCallbackQuery(msg.id, 
             'Voce curtiu o link do ' + user.first_name);
@@ -289,7 +384,38 @@ bot.on('callback_query', function(msg) {
             
             link.like.count++;
             link.like.users.push(userId);
-            replyInlineButton(bot, link, msg);  
+            replyInlineButton(bot, link, msg);
+             
+            console.log("ENTROU NO LIKE 2 ENVIO DE LINKS " + msg);
+          var temp = {};
+          temp['chatId'] = msg.chat.id;
+          temp['messageId'] = msg.message_id;
+          temp['member'] = msg.from;
+          temp['name'] = msg.from.first_name,
+          temp['link'] = link.link;
+          temp['like'] = link.like.count;
+          temp['dislike'] = link.dislike.count;
+        
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/link",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
+        
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
 
             bot.answerCallbackQuery(msg.id, 
             'Voce curtiu o link do ' + user.first_name);
