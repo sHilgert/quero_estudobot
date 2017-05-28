@@ -101,6 +101,7 @@ bot.onText(/all/, function (msg) {
 });
 
 bot.onText(/newGroup/, function(msg){
+  console.log("ENTROU 1");
   // Set the headers
   var headers = {
       'Content-Type':     'application/json'
@@ -114,13 +115,17 @@ bot.onText(/newGroup/, function(msg){
       headers: headers,
       form: msg.chat
   }
-  
+  console.log("fez o options");
   // Start the request
   request(options, function (error, response, body) {
+      console.log("Entrou na function de response");
       if (!error && response.statusCode == 200) {
           // Print out the response body
           console.log(body)
+      }else{
+        console.log(">>>erro: " + error);
       }
+      
   })
 });
 
