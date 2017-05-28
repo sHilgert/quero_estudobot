@@ -95,7 +95,7 @@ bot.on('message', (msg) => {
           var body = JSON.stringify(temp);
           var request = new http.ClientRequest({
             hostname: conecao,
-            path: "/app/content",
+            path: "/app/link",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
