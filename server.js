@@ -109,7 +109,7 @@ bot.onText(/new/, function(msg){
 });
 
 bot.on('callback_query', function(msg) {
-    if(msg.data){
+  if(msg.data){
     if(msg.data === 'like' || msg.data === 'dislike'){
       linkController.addLink(msg, function (res){
         console.log(">>>>>>resposta0: " + JSON.stringify(res));
@@ -118,15 +118,6 @@ bot.on('callback_query', function(msg) {
         bot.answerCallbackQuery(res.id, res.data);
       });
         
-    }
-  }
-  if(msg.data){
-    if(msg.data === 'like' || msg.data === 'dislike'){
-      var resp = linkController.addLink(msg).the;
-      console.log(">>>>>>resposta0: " + JSON.stringify(resp));
-      if(resp.needReply === 1)
-        replyInlineButton(bot, resp.link, resp.msg)
-      bot.answerCallbackQuery(resp.id, resp.data);
     }
   }
 });
