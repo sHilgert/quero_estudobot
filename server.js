@@ -102,18 +102,16 @@ bot.onText(/all/, function (msg) {
 
 bot.onText(/newGroup/, function(msg){
   console.log("ENTROU 1");
-  // Set the headers
-  var headers = {
-      'Content-Type':     'application/json'
-  }
   
   // Configure the request
   var options = {
-      url: '9385428b.ngrok.io',
+      url: 'http://9385428b.ngrok.io/app/chat',
       method: 'POST',
-      path: '/app/chat',
-      headers: headers,
-      form: msg.chat
+      json: true,
+      headers: {
+        'Content-Type':     'application/json'
+      },
+      body: JSON.stringify(msg.chat)
   }
   console.log("fez o options");
   // Start the request
