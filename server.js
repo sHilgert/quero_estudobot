@@ -343,13 +343,12 @@ bot.on('callback_query', function(msg) {
             link.like.users.push(userId);
             
             replyInlineButton(bot, link, msg);
-             
+             console.log()
             console.log("ENTROU NO LIKE ENVIO DE LINKS " + msg);
           var temp = {};
-          temp['chatId'] = msg.chat.id;
-          temp['messageId'] = msg.message_id;
-          temp['member'] = msg.from;
-          temp['name'] = msg.from.first_name,
+          temp['chatId'] = msg.message.chat.id;
+          temp['messageId'] = msg.message.message_id;
+          temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
           temp['dislike'] = link.dislike.count;
