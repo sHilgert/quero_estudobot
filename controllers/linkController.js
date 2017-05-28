@@ -10,6 +10,7 @@ exports.addLink = function(msg, res){
         var data = msg.data;
       if(data && data === 'dislike'){
         console.log(">>>>>>resposta1: " + JSON.stringify(resp));
+        console.log("MENSAGEM: " + msg);
         Link.findOne({chatId: msg.message.chat.id, messageId: msg.message.message_id - 1}, function(err, link){
           if(err) throw err;
         //findMessageAndChat(msg.message.message_id - 1,
