@@ -111,11 +111,11 @@ bot.onText(/new/, function(msg){
 bot.on('callback_query', function(msg) {
     if(msg.data){
     if(msg.data === 'like' || msg.data === 'dislike'){
-      linkController.addLink(msg, function(resposta){
-        console.log(">>>>>>resposta0: " + JSON.stringify(resposta));
-        if(resposta.needReply === 1)
-          replyInlineButton(bot, resposta.link, resposta.msg)
-        bot.answerCallbackQuery(resposta.id, resposta.data);
+      linkController.addLink(msg, function (res){
+        console.log(">>>>>>resposta0: " + JSON.stringify(res));
+        if(res.needReply === 1)
+          replyInlineButton(bot, res.link, res.msg)
+        bot.answerCallbackQuery(res.id, res.data);
       });
         
     }
