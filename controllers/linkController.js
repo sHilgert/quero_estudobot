@@ -14,6 +14,7 @@ exports.addLink = function(msg, res){
           msg.message.chat.id, function(link){
           if(!containsObject(userId, link.dislike.users)){
             if(!containsObject(userId, link.like.users)){
+              console.log(">>>>>>links: " + JSON.stringify(link));
               link.dislike.count++;
               link.dislike.users.push(userId);
               console.log(">>>>>>resposta2: " + JSON.stringify(resp));
