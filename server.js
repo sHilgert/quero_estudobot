@@ -70,6 +70,7 @@ bot.on('message', (msg) => {
   const chatId = msg.chat.id;
   if(chatId === msg.from.id){
     var categorization = classifier.categorize(msg.text);
+    console.log(categorization);
     if(categorization === 'help'){
        bot.sendMessage(chatId, helpResp);
     }else if (categorization === 'greeting'){
