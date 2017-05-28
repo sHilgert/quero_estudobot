@@ -82,36 +82,36 @@ bot.on('message', (msg) => {
           })
         };
         
-        // console.log("ENTROU NO ENVIO DE LINKS " + msg);
-        //   var temp = {};
-        //   temp['chatId'] = msg.chat.id;
-        //   temp['messageId'] = msg.message_id;
-        //   temp['member'] = msg.from;
-        //   temp['name'] = msg.from.first_name,
-        //   temp['link'] = link;
-        //   temp['like'] = 0;
-        //   temp['dislike'] = 0;
+        console.log("ENTROU NO ENVIO DE LINKS " + msg);
+          var temp = {};
+          temp['chatId'] = msg.chat.id;
+          temp['messageId'] = msg.message_id;
+          temp['member'] = msg.from;
+          temp['name'] = msg.from.first_name,
+          temp['link'] = link;
+          temp['like'] = 0;
+          temp['dislike'] = 0;
         
-        //   var body = JSON.stringify(temp);
-        //   var request = new http.ClientRequest({
-        //     hostname: conecao,
-        //     path: "/app/content",
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Content-Length": Buffer.byteLength(body)
-        //     }
-        //   });
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/content",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
         
-        //   request.end(body);
-        //   request.on('response', function (response) {
-        //     console.log('STATUS: ' + response.statusCode);
-        //     console.log('HEADERS: ' + JSON.stringify(response.headers));
-        //     response.setEncoding('utf8');
-        //     response.on('data', function (chunk) {
-        //       console.log('BODY: ' + chunk);
-        //     });
-        //   });
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
         
         bot.sendMessage(chatId, msg.from.first_name + " posted a link:\n" + link, options);
         
