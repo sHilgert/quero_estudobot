@@ -1,7 +1,11 @@
 "use strict";
 var http = require('http');
+var bayes = require('bayes')
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
+const greeetingResp = "Oi!";
+const helpResp = "Ola, estou vendo que voce precisa de ajuda. Para utilizar minhas funcionalidades é so me add no grupo! Eu consigo gerenciar os links enviados e disponibilizar pro pessoal dar aquela curtida ou quem sabe descurtir.";
+
 
 var configDescription = false;
 
@@ -45,12 +49,35 @@ bot.on('webhook_error', (error) => console.log(error.code));
 var conecao = '14c83884.ngrok.io';
 //var conecao = 'ed4f0e70.ngrok.io';
 
+//Naive Bayes
+var classifier = bayes()
 
+classifier.learn('oi, e ae, ola, eai, eae, fala ae', 'greeeting');
+classifier.learn('oi', 'greeeting');
+classifier.learn('e ae', 'greeeting');
+classifier.learn('fala ae', 'greeeting');
+classifier.learn('ola', 'greeeting');
+
+
+classifier.learn('ajuda, help, como usar, comandos, usabilidade, nao sei usar', 'help');
+classifier.learn('ajuda', 'help');
+classifier.learn('help', 'help');
+classifier.learn('comandos', 'help');
 
 // Functions
 bot.on('message', (msg) => {
   console.log(msg);
   const chatId = msg.chat.id;
+  if(chatId === msg.from.id){
+    var categorization = classifier.categorize(msg.text);
+    if(categorization === 'help'){
+       bot.sendMessage(chatId, helpResp);
+    }else if (categorization === 'greeting'){
+      bot.sendMessage(chatId, greeetingResp);
+    }else{
+      bot.sendMessage(chatId,"Desculpe nao consegui entender o que voce quis dizer");
+    }
+  }else {
   if(configDescription){
     var temp = {};
     temp['chatId'] = chatId;
@@ -144,6 +171,7 @@ bot.on('message', (msg) => {
         
       }
     });
+  }
   }
   }
 });

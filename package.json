@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/sHilgert/quero_estudobot#readme",
   "dependencies": {
+    "bayes": "0.0.6",
     "express": "^4.15.2",
     "http": "0.0.0",
     "mongoose": "^4.8.6",
