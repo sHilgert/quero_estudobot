@@ -115,8 +115,9 @@ bot.on('message', (msg) => {
 });
 
 bot.on('new_chat_participant', (msg) => {
-  bot.sendMessage(msg.chat.id, 'Welcome');
-  console.log("ENTROU NO NEW CHAT " + msg);
+  if(msg.new_chat_participant.id !== 387683658){
+    bot.sendMessage(msg.chat.id, 'Welcome');
+  console.log("ENTROU NO NEW MEMBER " + msg);
   var temp = msg.new_chat_participant;
   temp['chatId'] = msg.chat.id;
   
@@ -139,13 +140,14 @@ bot.on('new_chat_participant', (msg) => {
     response.on('data', function (chunk) {
       console.log('BODY: ' + chunk);
     });
-  });
+  });  
+  }
 });
 
 
 bot.on('left_chat_participant', (msg) => {
   bot.sendMessage(msg.chat.id, 'saiu');
-  console.log("SAIU DO CHAT " + msg);
+  console.log("ENTROU NO LEFT MEMBER " + msg);
   var temp = msg.left_chat_participant;
   temp['chatId'] = msg.chat.id;
   
