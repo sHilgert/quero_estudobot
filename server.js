@@ -45,11 +45,12 @@ bot.on('webhook_error', (error) => console.log(error.code));
 var conecao = 'ed4f0e70.ngrok.io';
 
 
+
 // Functions
 bot.on('message', (msg) => {
   console.log(msg);
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Received your message');
+  //bot.sendMessage(chatId, 'Received your message');
   if(msg.entities){
     msg.entities.forEach(function(entity){
       const chatId = msg.chat.id;
