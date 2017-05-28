@@ -10,7 +10,7 @@ exports.addLink = function(msg, res){
         var data = msg.data;
       if(data && data === 'dislike'){
         console.log(">>>>>>resposta1: " + JSON.stringify(resp));
-        this.findByMessageAndChat(msg.message.message_id - 1,
+        findMessageAndChat(msg.message.message_id - 1,
           msg.message.chat.id, function(link){
           console.log(">>>>>>links: " + JSON.stringify(link));
           if(!containsObject(userId, link.dislike.users)){
@@ -99,6 +99,13 @@ exports.update = function(linkObject){
 };
 
 exports.findByMessageAndChat = function(messageId, chatId, res){
+  Link.findOne({chatId: chatId, messageId: messageId}, function(err, link){
+    if(err) throw err;
+    res(link);
+  });
+};
+
+function findMessageAndChat(messageId, chatId, res){
   Link.findOne({chatId: chatId, messageId: messageId}, function(err, link){
     if(err) throw err;
     res(link);
