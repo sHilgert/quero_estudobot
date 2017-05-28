@@ -83,6 +83,10 @@ bot.on('message', (msg) => {
   }
 });
 
+bot.on('new_chat_member', (msg) => {
+  bot.sendMessage(msg.chat.id, 'Welcome');
+});
+
 bot.onText(/new/, function(msg){
   console.log("ENTROU 1");
   
