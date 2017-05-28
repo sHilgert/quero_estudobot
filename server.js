@@ -229,12 +229,69 @@ bot.onText(/new/, function(msg){
 bot.on('callback_query', function(msg) {
   if(msg.data){
     if(msg.data === 'like' || msg.data === 'dislike'){
-      linkController.addLink(msg, function (res){
-        console.log(">>>>>>resposta0: " + JSON.stringify(res));
-        if(res.needReply === 1)
-          replyInlineButton(bot, res.link, res.msg)
-        bot.answerCallbackQuery(res.id, res.data);
+       var user = msg.from;
+    var userId = {userId: user.id};
+    var data = msg.data;
+    if(data === 'dislike'){
+      linkController.findByMessageAndChat(msg.message.message_id - 1,
+        msg.message.chat.id, function(link){
+        if(!containsObject(userId, link.dislike.users)){
+          if(!containsObject(userId, link.like.users)){
+            link.dislike.count++;
+            link.dislike.users.push(userId);
+            
+            replyInlineButton(bot, link, msg);  
+
+            bot.answerCallbackQuery(msg.id, 
+            'You disliked ' + user.first_name + ' link');
+          }else{
+            link.like.count--;
+            var index = link.like.users.indexOf(userId);
+            link.like.users.splice(index, 1);
+            
+            link.dislike.count++;
+            link.dislike.users.push(userId);
+            replyInlineButton(bot, link, msg);  
+
+            bot.answerCallbackQuery(msg.id, 
+            'You disliked ' + user.first_name + ' link');
+          }
+        }else{
+          bot.answerCallbackQuery(msg.id, 
+          'You already disliked ' + user.first_name + ' link');
+        }
       });
+      
+    }else if (data === 'like'){
+      linkController.findByMessageAndChat(msg.message.message_id - 1,
+        msg.message.chat.id, function(link){
+        if(!containsObject(userId, link.like.users)){
+          if(!containsObject(userId, link.dislike.users)){
+            link.like.count++;
+            link.like.users.push(userId);
+            
+            replyInlineButton(bot, link, msg);  
+
+            bot.answerCallbackQuery(msg.id, 
+            'You liked ' + user.first_name + ' link');
+          }else{
+            link.dislike.count--;
+            var index = link.dislike.users.indexOf(userId);
+            link.dislike.users.splice(index, 1);
+            
+            link.like.count++;
+            link.like.users.push(userId);
+            replyInlineButton(bot, link, msg);  
+
+            bot.answerCallbackQuery(msg.id, 
+            'You liked ' + user.first_name + ' link');
+          }
+        }else{
+          bot.answerCallbackQuery(msg.id, 
+          'You already liked ' + user.first_name + ' link');
+        }
+      });
+    }
         
     }
   }
@@ -279,4 +336,15 @@ function replyInlineButton(bot, link, msg){
   
   bot.editMessageReplyMarkup(settings, 
   {message_id: msg.message.message_id, chat_id: msg.message.chat.id});
+}
+
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].userId == obj.userId) {
+            return true;
+        }
+    }
+
+    return false;
 }
