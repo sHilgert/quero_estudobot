@@ -12,6 +12,7 @@ exports.addLink = function(msg, res){
         console.log(">>>>>>resposta1: " + JSON.stringify(resp));
         this.findByMessageAndChat(msg.message.message_id - 1,
           msg.message.chat.id, function(link){
+          console.log(">>>>>>links: " + JSON.stringify(link));
           if(!containsObject(userId, link.dislike.users)){
             if(!containsObject(userId, link.like.users)){
               console.log(">>>>>>links: " + JSON.stringify(link));
