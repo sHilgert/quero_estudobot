@@ -3,6 +3,7 @@ var http = require('http');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 
+
 // Controllers
 const linkController = require('./controllers/linkController');
 
@@ -38,6 +39,9 @@ bot.setWebHook(`${URL}/bot${TOKEN}`);
 //Error Handlers
 bot.on('polling_error', (error) => console.log(error.code));
 bot.on('webhook_error', (error) => console.log(error.code));
+
+//conexao com o webservice
+var conecao = '14c83884.ngrok.io';
 
 
 // Functions
@@ -80,7 +84,7 @@ bot.on('message', (msg) => {
           var temp = {};
           temp['chatId'] = msg.chat.id;
           temp['messageId'] = msg.message_id;
-          temp['userId'] = msg.from.id;
+          temp['member'] = msg.from;
           temp['name'] = msg.from.first_name,
           temp['link'] = link;
           temp['like'] = 0;
@@ -88,7 +92,7 @@ bot.on('message', (msg) => {
         
           var body = JSON.stringify(temp);
           var request = new http.ClientRequest({
-            hostname: '14c83884.ngrok.io',
+            hostname: conecao,
             path: "/app/content",
             method: "POST",
             headers: {
@@ -123,7 +127,7 @@ bot.on('new_chat_participant', (msg) => {
   
   var body = JSON.stringify(temp);
   var request = new http.ClientRequest({
-    hostname: '14c83884.ngrok.io',
+    hostname: conecao,
     path: "/app/member",
     method: "POST",
     headers: {
@@ -141,6 +145,29 @@ bot.on('new_chat_participant', (msg) => {
       console.log('BODY: ' + chunk);
     });
   });  
+  } else {
+     console.log("ENTROU NO NEW");
+  
+  var body = JSON.stringify(msg.chat); 
+  var request = new http.ClientRequest({
+    hostname: conecao,
+    path: "/app/chat",
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body)
+    }
+  });
+
+  request.end(body);
+  request.on('response', function (response) {
+    console.log('STATUS: ' + response.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(response.headers));
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+  });
   }
 });
 
@@ -153,7 +180,7 @@ bot.on('left_chat_participant', (msg) => {
   
   var body = JSON.stringify(temp);
   var request = new http.ClientRequest({
-    hostname: '14c83884.ngrok.io',
+    hostname: conecao,
     path: "/app/member",
     method: "DELETE",
     headers: {
@@ -174,28 +201,7 @@ bot.on('left_chat_participant', (msg) => {
 });
 
 bot.onText(/new/, function(msg){
-  console.log("ENTROU 1");
-  
-  var body = JSON.stringify(msg.chat); 
-  var request = new http.ClientRequest({
-    hostname: '14c83884.ngrok.io',
-    path: "/app/chat",
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(body)
-    }
-  });
-
-  request.end(body);
-  request.on('response', function (response) {
-    console.log('STATUS: ' + response.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(response.headers));
-    response.setEncoding('utf8');
-    response.on('data', function (chunk) {
-      console.log('BODY: ' + chunk);
-    });
-  });
+ 
 });
 
 bot.on('callback_query', function(msg) {
@@ -223,7 +229,7 @@ bot.onText(/\/ping/, (msg, match) => {
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, "tentando pingar o servidor...");
   var options = {
-    host: '156fe330.ngrok.io',
+    host: conecao,
     path: '/app/ping',
     method : 'GET'
   };
