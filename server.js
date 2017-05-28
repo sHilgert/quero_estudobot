@@ -77,7 +77,7 @@ bot.on('message', (msg) => {
         var options = {
           reply_markup: JSON.stringify({
             inline_keyboard: [
-              [{ text: 'dislike', callback_data: "dislike"}, { text: 'like', callback_data: "like"}]
+              [{ text: 'descurtir', callback_data: "dislike"}, { text: 'curtir', callback_data: "like"}]
             ]
           })
         };
@@ -113,7 +113,7 @@ bot.on('message', (msg) => {
             });
           });
         
-        bot.sendMessage(chatId, msg.from.first_name + " posted a link:\n" + link, options);
+        bot.sendMessage(chatId, msg.from.first_name + " postou um link:\n" + link, options);
         
       }
     });
@@ -252,10 +252,9 @@ bot.on('callback_query', function(msg) {
             
             console.log("ENTROU NO DISLIKE ENVIO DE LINKS " + msg);
           var temp = {};
-          temp['chatId'] = msg.chat.id;
-          temp['messageId'] = msg.message_id;
-          temp['member'] = msg.from;
-          temp['name'] = msg.from.first_name,
+          temp['chatId'] = msg.message.chat.id;
+          temp['messageId'] = msg.message.message_id;
+          temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
           temp['dislike'] = link.dislike.count;
@@ -296,10 +295,9 @@ bot.on('callback_query', function(msg) {
              
             console.log("ENTROU NO DISLIKE 2 ENVIO DE LINKS " + msg);
           var temp = {};
-          temp['chatId'] = msg.chat.id;
-          temp['messageId'] = msg.message_id;
-          temp['member'] = msg.from;
-          temp['name'] = msg.from.first_name,
+          temp['chatId'] = msg.message.chat.id;
+          temp['messageId'] = msg.message.message_id;
+          temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
           temp['dislike'] = link.dislike.count;
@@ -387,10 +385,9 @@ bot.on('callback_query', function(msg) {
              
             console.log("ENTROU NO LIKE 2 ENVIO DE LINKS " + msg);
           var temp = {};
-          temp['chatId'] = msg.chat.id;
-          temp['messageId'] = msg.message_id;
-          temp['member'] = msg.from;
-          temp['name'] = msg.from.first_name,
+          temp['chatId'] = msg.message.chat.id;
+          temp['messageId'] = msg.message.message_id;
+          temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
           temp['dislike'] = link.dislike.count;
