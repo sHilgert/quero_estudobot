@@ -83,22 +83,6 @@ bot.on('message', (msg) => {
   }
 });
 
-bot.onText(/all/, function (msg) {
-    var userId = msg.from.id;
-    var chatId = msg.chat.id;
-    
-    bot.sendMessage(chatId, "links send via private chat");
-    bot.sendMessage(userId, "- new links comming -");
-
-    linkController.allLinks(chatId ,function(res){
-      res.forEach(function(r){
-        bot.sendMessage(userId, r.name + "\n" + 
-        r.link + "\nlikes: " + r.like.count + 
-        "\ndislikes:" + r.dislike.count);
-      });
-    });
-});
-
 bot.onText(/new/, function(msg){
   console.log("ENTROU 1");
   
@@ -124,35 +108,23 @@ bot.onText(/new/, function(msg){
   });
 });
 
-bot.onText(/links/, function (msg) {
-  var chatId = msg.chat.id;
-  var opts = {
-      reply_to_message_id: msg.message_id,
-      reply_markup: JSON.stringify({
-        keyboard: [['all'],['choose user']],
-        one_time_keyboard: true,
-        selective: true
-      })
-    };
-  bot.sendMessage(chatId,'select option', opts);
-});
-
-bot.onText(/\/drive/, function (msg) {
-  var chatId = msg.chat.id;
-  var opts = {
-      reply_to_message_id: msg.message_id,
-      reply_markup: JSON.stringify({
-        keyboard: [['links', 'files'],['remainders']],
-        selective: true
-      })
-    };
-    bot.sendMessage(chatId, 'select a drive service', opts);
-});
-
 bot.on('callback_query', function(msg) {
+    if(msg.data){
+    if(msg.data === 'like' || msg.data === 'dislike'){
+      var resp = linkController.addLink(msg).then(resp => {
+        console.log(">>>>>>resposta0: " + JSON.stringify(resp));
+        if(resp.needReply === 1)
+          replyInlineButton(bot, resp.link, resp.msg)
+        bot.answerCallbackQuery(resp.id, resp.data);
+      })
+      .catch(err => {
+        console.log("deu erro " + err);
+      });
+    }
+  }
   if(msg.data){
     if(msg.data === 'like' || msg.data === 'dislike'){
-      var resp = linkController.addLink(msg);
+      var resp = linkController.addLink(msg).the;
       console.log(">>>>>>resposta0: " + JSON.stringify(resp));
       if(resp.needReply === 1)
         replyInlineButton(bot, resp.link, resp.msg)
