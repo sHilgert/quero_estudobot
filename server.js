@@ -2,6 +2,7 @@
 var http = require('http');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
+var request = require('request');
 
 // Controllers
 const linkController = require('./controllers/linkController');
@@ -42,6 +43,9 @@ bot.on('webhook_error', (error) => console.log(error.code));
 
 // Functions
 bot.on('message', (msg) => {
+  console.log(msg);
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, 'Received your message');
   if(msg.entities){
     msg.entities.forEach(function(entity){
       const chatId = msg.chat.id;
@@ -94,6 +98,30 @@ bot.onText(/all/, function (msg) {
         "\ndislikes:" + r.dislike.count);
       });
     });
+});
+
+bot.onText(/newGroup/, function(msg){
+  // Set the headers
+  var headers = {
+      'Content-Type':     'application/json'
+  }
+  
+  // Configure the request
+  var options = {
+      url: '9385428b.ngrok.io',
+      method: 'POST',
+      path: '/app/chat',
+      headers: headers,
+      form: msg.chat
+  }
+  
+  // Start the request
+  request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+          // Print out the response body
+          console.log(body)
+      }
+  })
 });
 
 bot.onText(/links/, function (msg) {
@@ -159,15 +187,6 @@ bot.onText(/\/ping/, (msg, match) => {
     console.log("Got error: " + e.message);
   });
 });
-
-bot.on('message', (msg) => {
-  console.log(msg);
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Received your message');
-});
-
-
-
 
 function replyInlineButton(bot, link, msg){
   linkController.update(link);
