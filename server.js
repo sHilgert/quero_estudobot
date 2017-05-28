@@ -111,15 +111,13 @@ bot.onText(/new/, function(msg){
 bot.on('callback_query', function(msg) {
     if(msg.data){
     if(msg.data === 'like' || msg.data === 'dislike'){
-      var resp = linkController.addLink(msg).then(resp => {
+      linkController.addLink(msg, function(resp){
         console.log(">>>>>>resposta0: " + JSON.stringify(resp));
         if(resp.needReply === 1)
           replyInlineButton(bot, resp.link, resp.msg)
         bot.answerCallbackQuery(resp.id, resp.data);
-      })
-      .catch(err => {
-        console.log("deu erro " + err);
       });
+        
     }
   }
   if(msg.data){

@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 var Link = require('../models/link');
 
-exports.addLink = function(msg){
+exports.addLink = function(msg, res){
   console.log("CALLBACK: " + JSON.stringify(msg));
-  return new Promise((resolve, reject) => {
     var resp = {};
       var user = msg.from;
       var userId = {userId: user.id};
@@ -79,8 +78,7 @@ exports.addLink = function(msg){
         });
       }
       console.log("RESP DEPOIS >>>: " + JSON.stringify(resp));
-      return resolve(resp);
-  });
+      res(resp);
 };
 
 exports.create =function (linkObject){
