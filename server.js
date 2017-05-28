@@ -125,8 +125,9 @@ bot.on('callback_query', function(msg) {
   console.log("CALLBACK: " + msg);
     var user = msg.from;
     var userId = {userId: user.id};
-    var data = msg.data;
-    if(data === 'dislike'){
+    if(msg.data)
+      var data = msg.data;
+    if(data && data === 'dislike'){
       linkController.findByMessageAndChat(msg.message.message_id - 1,
         msg.message.chat.id, function(link){
         if(!containsObject(userId, link.dislike.users)){
@@ -156,7 +157,7 @@ bot.on('callback_query', function(msg) {
         }
       });
       
-    }else if (data === 'like'){
+    }else if (data && data === 'like'){
       linkController.findByMessageAndChat(msg.message.message_id - 1,
         msg.message.chat.id, function(link){
         if(!containsObject(userId, link.like.users)){
