@@ -9,17 +9,20 @@ exports.addLink = function(msg){
     if(msg.data)
       var data = msg.data;
     if(data && data === 'dislike'){
+      console.log(">>>>>>resposta1: " + JSON.stringify(resp));
       this.findByMessageAndChat(msg.message.message_id - 1,
         msg.message.chat.id, function(link){
         if(!containsObject(userId, link.dislike.users)){
           if(!containsObject(userId, link.like.users)){
             link.dislike.count++;
             link.dislike.users.push(userId);
+            console.log(">>>>>>resposta2: " + JSON.stringify(resp));
             resp['needReply'] = 1;
             resp['link'] = link;
             resp['msg'] = msg;
             resp['id'] = msg.id;
             resp['data'] = 'You disliked ' + user.first_name + ' link';
+            console.log(">>>>>>resposta3: " + JSON.stringify(resp));
           }else{
             link.like.count--;
             var index = link.like.users.indexOf(userId);
