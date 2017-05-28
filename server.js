@@ -201,7 +201,28 @@ bot.on('left_chat_participant', (msg) => {
 });
 
 bot.onText(/new/, function(msg){
- 
+ console.log("ENTROU NO NEW");
+  
+  var body = JSON.stringify(msg.chat); 
+  var request = new http.ClientRequest({
+    hostname: conecao,
+    path: "/app/chat",
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body)
+    }
+  });
+
+  request.end(body);
+  request.on('response', function (response) {
+    console.log('STATUS: ' + response.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(response.headers));
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+  });
 });
 
 bot.on('callback_query', function(msg) {
