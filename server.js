@@ -251,7 +251,7 @@ bot.on('callback_query', function(msg) {
             replyInlineButton(bot, link, msg);  
 
             bot.answerCallbackQuery(msg.id, 
-            'You disliked ' + user.first_name + ' link');
+            'Voce descurtiu o link do' + user.first_name);
           }else{
             link.like.count--;
             var index = link.like.users.indexOf(userId);
@@ -262,11 +262,11 @@ bot.on('callback_query', function(msg) {
             replyInlineButton(bot, link, msg);  
 
             bot.answerCallbackQuery(msg.id, 
-            'You disliked ' + user.first_name + ' link');
+            'Voce descurtiu o link do' + user.first_name);
           }
         }else{
           bot.answerCallbackQuery(msg.id, 
-          'You already disliked ' + user.first_name + ' link');
+          'Voce ja descurtiu o link do' + user.first_name);
         }
       });
       
@@ -281,7 +281,7 @@ bot.on('callback_query', function(msg) {
             replyInlineButton(bot, link, msg);  
 
             bot.answerCallbackQuery(msg.id, 
-            'You liked ' + user.first_name + ' link');
+            'Voce curtiu o link do ' + user.first_name);
           }else{
             link.dislike.count--;
             var index = link.dislike.users.indexOf(userId);
@@ -292,11 +292,11 @@ bot.on('callback_query', function(msg) {
             replyInlineButton(bot, link, msg);  
 
             bot.answerCallbackQuery(msg.id, 
-            'You liked ' + user.first_name + ' link');
+            'Voce curtiu o link do ' + user.first_name);
           }
         }else{
           bot.answerCallbackQuery(msg.id, 
-          'You already liked ' + user.first_name + ' link');
+          'Voce ja curtiu o link do ' + user.first_name);
         }
       });
     }
@@ -337,8 +337,8 @@ function replyInlineButton(bot, link, msg){
   
   var settings = {
     inline_keyboard: [
-        [{ text: link.dislike.count + ' dislike ', callback_data: "dislike"},
-        { text: link.like.count + ' like', callback_data: "like"}]
+        [{ text: link.dislike.count + ' descurtir ', callback_data: "dislike"},
+        { text: link.like.count + ' curtir', callback_data: "like"}]
       ]
   };
   
