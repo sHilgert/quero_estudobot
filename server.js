@@ -85,7 +85,7 @@ bot.on('message', (msg) => {
 
 bot.on('new_chat_participant', (msg) => {
   bot.sendMessage(msg.chat.id, 'Welcome');
-    console.log("ENTROU NO NEW CHAT");
+  console.log("ENTROU NO NEW CHAT " + msg);
   var temp = msg.new_chat_participant;
   temp['chatId'] = msg.chat.id;
   
@@ -114,6 +114,30 @@ bot.on('new_chat_participant', (msg) => {
 
 bot.on('left_chat_participant', (msg) => {
   bot.sendMessage(msg.chat.id, 'saiu');
+  console.log("SAIU DO CHAT " + msg);
+  var temp = msg.left_chat_participant;
+  temp['chatId'] = msg.chat.id;
+  
+  var body = JSON.stringify(temp);
+  var request = new http.ClientRequest({
+    hostname: '14c83884.ngrok.io',
+    path: "/app/member",
+    method: "DELETE",
+    headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body)
+    }
+  });
+
+  request.end(body);
+  request.on('response', function (response) {
+    console.log('STATUS: ' + response.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(response.headers));
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+  });
 });
 
 bot.onText(/new/, function(msg){
