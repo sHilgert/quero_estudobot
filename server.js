@@ -83,7 +83,7 @@ bot.on('message', (msg) => {
   }
 });
 
-bot.on('new_chat_member', (msg) => {
+bot.on('new_chat_participant', (msg) => {
   bot.sendMessage(msg.chat.id, 'Welcome');
 });
 
