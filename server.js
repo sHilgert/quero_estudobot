@@ -41,7 +41,8 @@ bot.on('polling_error', (error) => console.log(error.code));
 bot.on('webhook_error', (error) => console.log(error.code));
 
 //conexao com o webservice
-var conecao = '14c83884.ngrok.io';
+//var conecao = '14c83884.ngrok.io';
+var conecao = 'ed4f0e70.ngrok.io';
 
 
 // Functions
