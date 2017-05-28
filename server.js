@@ -43,8 +43,8 @@ bot.on('polling_error', (error) => console.log(error.code));
 bot.on('webhook_error', (error) => console.log(error.code));
 
 //conexao com o webservice
-var conecao = '14c83884.ngrok.io';
-//var conecao = 'ed4f0e70.ngrok.io';
+//var conecao = '14c83884.ngrok.io';
+var conecao = 'ed4f0e70.ngrok.io';
 
 
 
@@ -85,7 +85,7 @@ bot.on('message', (msg) => {
     temp['chatId'] = chatId;
     temp['description'] = msg.text;
     configDescription = false;
-        console.log("ENTROU NA CATEGORIA " + msg);
+        console.log("ENTROU NA DESCRIPTION " + msg);
           var body = JSON.stringify(temp);
           var request = new http.ClientRequest({
             hostname: conecao,
