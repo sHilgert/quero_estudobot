@@ -170,7 +170,14 @@ bot.on('new_chat_participant', (msg) => {
       console.log('BODY: ' + chunk);
     });
   });
+  var chatId = msg.chat.id;
+  bot.sendMessage(chatId, '/apresentacao');
   }
+});
+
+bot.onText(/\/apresentacao/, function (msg) {
+  var chatId = msg.chat.id;
+  bot.sendMessage(chatId, 'Ola eu sou o ChatBot que gosta de ajudar estudantes!');
 });
 
 
@@ -253,7 +260,7 @@ bot.on('callback_query', function(msg) {
             console.log("ENTROU NO DISLIKE ENVIO DE LINKS " + msg);
           var temp = {};
           temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id;
+          temp['messageId'] = msg.message.message_id - 1;
           temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
@@ -296,7 +303,7 @@ bot.on('callback_query', function(msg) {
             console.log("ENTROU NO DISLIKE 2 ENVIO DE LINKS " + msg);
           var temp = {};
           temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id;
+          temp['messageId'] = msg.message.message_id  - 1;
           temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
@@ -345,7 +352,7 @@ bot.on('callback_query', function(msg) {
             console.log("ENTROU NO LIKE ENVIO DE LINKS " + msg);
           var temp = {};
           temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id;
+          temp['messageId'] = msg.message.message_id - 1;
           temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
@@ -386,7 +393,7 @@ bot.on('callback_query', function(msg) {
             console.log("ENTROU NO LIKE 2 ENVIO DE LINKS " + msg);
           var temp = {};
           temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id;
+          temp['messageId'] = msg.message.message_id - 1;
           temp['member'] = msg.message.from,
           temp['link'] = link.link;
           temp['like'] = link.like.count;
