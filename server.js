@@ -3,7 +3,6 @@ var http = require('http');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 
-var configCategory = false;
 var configDescription = false;
 
 // Controllers
@@ -52,35 +51,7 @@ var conecao = '14c83884.ngrok.io';
 bot.on('message', (msg) => {
   console.log(msg);
   const chatId = msg.chat.id;
-  if(configCategory){
-    var temp = {};
-    temp['chatId'] = chatId;
-    temp['category'] = msg.text;
-    configCategory = false;
-  
-    console.log("ENTROU NA CATEGORIA " + msg);
-          var body = JSON.stringify(temp);
-          var request = new http.ClientRequest({
-            hostname: conecao,
-            path: "/app/chatCategory",
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Content-Length": Buffer.byteLength(body)
-            }
-          });
-        
-          request.end(body);
-          request.on('response', function (response) {
-            console.log('STATUS: ' + response.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(response.headers));
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              console.log('BODY: ' + chunk);
-            });
-          });
-    
-  }else if(configDescription){
+  if(configDescription){
     var temp = {};
     temp['chatId'] = chatId;
     temp['description'] = msg.text;
@@ -231,8 +202,7 @@ bot.on('new_chat_participant', (msg) => {
   var options = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
-        [{ text: 'descricao', callback_data: "descricao"}], 
-        [{ text: 'categoria', callback_data: "categoria"}]
+        [{ text: 'descricao', callback_data: "descricao"}]
       ]
     })
   };
@@ -489,14 +459,11 @@ bot.on('callback_query', function(msg) {
         });
       }
         
-    }else if (data === 'categoria' || data === 'descricao'){
-      if(data === 'categoria'){
-        bot.sendMessage(msg.message.chat.id, 'Digite a categoria do grupo');
-        configCategory = true;
-      }else if(data === 'descricao'){
-        bot.sendMessage(msg.message.chat.id, 'Digite a descricao do grupo');
-        configDescription = true;
-      }
+    }else if (data === 'descricao'){
+        if(data === 'descricao'){
+          bot.sendMessage(msg.message.chat.id, 'Digite a descricao do grupo');
+          configDescription = true;
+        }
     }
   }
 });
