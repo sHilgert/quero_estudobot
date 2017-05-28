@@ -122,6 +122,7 @@ bot.onText(/\/drive/, function (msg) {
 });
 
 bot.on('callback_query', function(msg) {
+  console.log("CALLBACK: " + msg);
     var user = msg.from;
     var userId = {userId: user.id};
     var data = msg.data;
