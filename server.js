@@ -3,6 +3,8 @@ var http = require('http');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 
+var configCategory = false;
+var configDescription = false;
 
 // Controllers
 const linkController = require('./controllers/linkController');
@@ -41,8 +43,8 @@ bot.on('polling_error', (error) => console.log(error.code));
 bot.on('webhook_error', (error) => console.log(error.code));
 
 //conexao com o webservice
-//var conecao = '14c83884.ngrok.io';
-var conecao = 'ed4f0e70.ngrok.io';
+var conecao = '14c83884.ngrok.io';
+//var conecao = 'ed4f0e70.ngrok.io';
 
 
 
@@ -50,6 +52,61 @@ var conecao = 'ed4f0e70.ngrok.io';
 bot.on('message', (msg) => {
   console.log(msg);
   const chatId = msg.chat.id;
+  if(configCategory){
+    var temp = {};
+    temp['chatId'] = chatId;
+    temp['category'] = msg.text;
+    configCategory = false;
+  
+    console.log("ENTROU NA CATEGORIA " + msg);
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/chatCategory",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
+        
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
+    
+  }else if(configDescription){
+    var temp = {};
+    temp['chatId'] = chatId;
+    temp['description'] = msg.text;
+    configDescription = false;
+        console.log("ENTROU NA CATEGORIA " + msg);
+          var body = JSON.stringify(temp);
+          var request = new http.ClientRequest({
+            hostname: conecao,
+            path: "/app/chatDescription",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body)
+            }
+          });
+        
+          request.end(body);
+          request.on('response', function (response) {
+            console.log('STATUS: ' + response.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(response.headers));
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              console.log('BODY: ' + chunk);
+            });
+          });
+  }else{
   //bot.sendMessage(chatId, 'Received your message');
   if(msg.entities){
     msg.entities.forEach(function(entity){
@@ -87,7 +144,6 @@ bot.on('message', (msg) => {
           temp['chatId'] = msg.chat.id;
           temp['messageId'] = msg.message_id;
           temp['member'] = msg.from;
-          temp['name'] = msg.from.first_name,
           temp['link'] = link;
           temp['like'] = 0;
           temp['dislike'] = 0;
@@ -117,6 +173,7 @@ bot.on('message', (msg) => {
         
       }
     });
+  }
   }
 });
 
@@ -171,15 +228,17 @@ bot.on('new_chat_participant', (msg) => {
     });
   });
   var chatId = msg.chat.id;
-  bot.sendMessage(chatId, '/apresentacao');
+  var options = {
+    reply_markup: JSON.stringify({
+      inline_keyboard: [
+        [{ text: 'descricao', callback_data: "descricao"}], 
+        [{ text: 'categoria', callback_data: "categoria"}]
+      ]
+    })
+  };
+  bot.sendMessage(chatId, 'Ola eu sou o bot Quero Estudos! Eu estou aqui para ajudar seu grupo de estudos ficar ainda melhor!', options);
   }
 });
-
-bot.onText(/\/apresentacao/, function (msg) {
-  var chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Ola eu sou o ChatBot que gosta de ajudar estudantes!');
-});
-
 
 bot.on('left_chat_participant', (msg) => {
   bot.sendMessage(msg.chat.id, 'saiu');
@@ -242,194 +301,202 @@ bot.on('callback_query', function(msg) {
     var userId = {userId: user.id};
     var data = msg.data;
     if(data === 'like' || data === 'dislike'){
-    console.log("ENTROU asasasas2 >>> " + JSON.stringify(msg));
-    console.log("ENTROU LINKS >>> " + JSON.stringify(msg));
-    var data = msg.data;
-    if(data === 'dislike'){
-      console.log("ENTROU 3 >>> " + JSON.stringify(msg));
-      linkController.findByMessageAndChat(msg.message.message_id - 1,
-        msg.message.chat.id, function(link){
-          console.log("ENTROU 4 >>> " + JSON.stringify(link));
-        if(!containsObject(userId, link.dislike.users)){
-          if(!containsObject(userId, link.like.users)){
-            link.dislike.count++;
-            link.dislike.users.push(userId);
-            console.log("ENTROU 5 >>> " + JSON.stringify(link));
-            replyInlineButton(bot, link, msg);  
-            
-            console.log("ENTROU NO DISLIKE ENVIO DE LINKS " + msg);
-          var temp = {};
-          temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id - 1;
-          temp['member'] = msg.message.from,
-          temp['link'] = link.link;
-          temp['like'] = link.like.count;
-          temp['dislike'] = link.dislike.count;
-        
-          var body = JSON.stringify(temp);
-          var request = new http.ClientRequest({
-            hostname: conecao,
-            path: "/app/link",
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Content-Length": Buffer.byteLength(body)
-            }
-          });
-        
-          request.end(body);
-          request.on('response', function (response) {
-            console.log('STATUS: ' + response.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(response.headers));
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              console.log('BODY: ' + chunk);
-            });
-          });
-            
-            bot.answerCallbackQuery(msg.id, 
-            'Voce descurtiu o link do' + user.first_name);
-            
-          }else{
-            link.like.count--;
-            var index = link.like.users.indexOf(userId);
-            link.like.users.splice(index, 1);
-            
-            link.dislike.count++;
-            link.dislike.users.push(userId);
-            replyInlineButton(bot, link, msg);
-            
-             
-            console.log("ENTROU NO DISLIKE 2 ENVIO DE LINKS " + msg);
-          var temp = {};
-          temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id  - 1;
-          temp['member'] = msg.message.from,
-          temp['link'] = link.link;
-          temp['like'] = link.like.count;
-          temp['dislike'] = link.dislike.count;
-        
-          var body = JSON.stringify(temp);
-          var request = new http.ClientRequest({
-            hostname: conecao,
-            path: "/app/link",
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Content-Length": Buffer.byteLength(body)
-            }
-          });
-        
-          request.end(body);
-          request.on('response', function (response) {
-            console.log('STATUS: ' + response.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(response.headers));
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              console.log('BODY: ' + chunk);
-            });
-          });
-
-            bot.answerCallbackQuery(msg.id, 
-            'Voce descurtiu o link do' + user.first_name);
-          }
-        }else{
-          bot.answerCallbackQuery(msg.id, 
-          'Voce ja descurtiu o link do' + user.first_name);
-        }
-      });
-      
-    }else if (data === 'like'){
-      linkController.findByMessageAndChat(msg.message.message_id - 1,
-        msg.message.chat.id, function(link){
-        if(!containsObject(userId, link.like.users)){
+      console.log("ENTROU asasasas2 >>> " + JSON.stringify(msg));
+      console.log("ENTROU LINKS >>> " + JSON.stringify(msg));
+      var data = msg.data;
+      if(data === 'dislike'){
+        console.log("ENTROU 3 >>> " + JSON.stringify(msg));
+        linkController.findByMessageAndChat(msg.message.message_id - 1,
+          msg.message.chat.id, function(link){
+            console.log("ENTROU 4 >>> " + JSON.stringify(link));
           if(!containsObject(userId, link.dislike.users)){
-            link.like.count++;
-            link.like.users.push(userId);
-            
-            replyInlineButton(bot, link, msg);
-             console.log()
-            console.log("ENTROU NO LIKE ENVIO DE LINKS " + msg);
-          var temp = {};
-          temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id - 1;
-          temp['member'] = msg.message.from,
-          temp['link'] = link.link;
-          temp['like'] = link.like.count;
-          temp['dislike'] = link.dislike.count;
-        
-          var body = JSON.stringify(temp);
-          var request = new http.ClientRequest({
-            hostname: conecao,
-            path: "/app/link",
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Content-Length": Buffer.byteLength(body)
-            }
-          });
-        
-          request.end(body);
-          request.on('response', function (response) {
-            console.log('STATUS: ' + response.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(response.headers));
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              console.log('BODY: ' + chunk);
+            if(!containsObject(userId, link.like.users)){
+              link.dislike.count++;
+              link.dislike.users.push(userId);
+              console.log("ENTROU 5 >>> " + JSON.stringify(link));
+              replyInlineButton(bot, link, msg);  
+              
+              console.log("ENTROU NO DISLIKE ENVIO DE LINKS " + msg);
+            var temp = {};
+            temp['chatId'] = msg.message.chat.id;
+            temp['messageId'] = msg.message.message_id - 1;
+            temp['member'] = msg.message.from,
+            temp['link'] = link.link;
+            temp['like'] = link.like.count;
+            temp['dislike'] = link.dislike.count;
+          
+            var body = JSON.stringify(temp);
+            var request = new http.ClientRequest({
+              hostname: conecao,
+              path: "/app/link",
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Content-Length": Buffer.byteLength(body)
+              }
             });
-          });
-
-            bot.answerCallbackQuery(msg.id, 
-            'Voce curtiu o link do ' + user.first_name);
+          
+            request.end(body);
+            request.on('response', function (response) {
+              console.log('STATUS: ' + response.statusCode);
+              console.log('HEADERS: ' + JSON.stringify(response.headers));
+              response.setEncoding('utf8');
+              response.on('data', function (chunk) {
+                console.log('BODY: ' + chunk);
+              });
+            });
+              
+              bot.answerCallbackQuery(msg.id, 
+              'Voce descurtiu o link do' + user.first_name);
+              
+            }else{
+              link.like.count--;
+              var index = link.like.users.indexOf(userId);
+              link.like.users.splice(index, 1);
+              
+              link.dislike.count++;
+              link.dislike.users.push(userId);
+              replyInlineButton(bot, link, msg);
+              
+               
+              console.log("ENTROU NO DISLIKE 2 ENVIO DE LINKS " + msg);
+            var temp = {};
+            temp['chatId'] = msg.message.chat.id;
+            temp['messageId'] = msg.message.message_id  - 1;
+            temp['member'] = msg.message.from,
+            temp['link'] = link.link;
+            temp['like'] = link.like.count;
+            temp['dislike'] = link.dislike.count;
+          
+            var body = JSON.stringify(temp);
+            var request = new http.ClientRequest({
+              hostname: conecao,
+              path: "/app/link",
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Content-Length": Buffer.byteLength(body)
+              }
+            });
+          
+            request.end(body);
+            request.on('response', function (response) {
+              console.log('STATUS: ' + response.statusCode);
+              console.log('HEADERS: ' + JSON.stringify(response.headers));
+              response.setEncoding('utf8');
+              response.on('data', function (chunk) {
+                console.log('BODY: ' + chunk);
+              });
+            });
+  
+              bot.answerCallbackQuery(msg.id, 
+              'Voce descurtiu o link do' + user.first_name);
+            }
           }else{
-            link.dislike.count--;
-            var index = link.dislike.users.indexOf(userId);
-            link.dislike.users.splice(index, 1);
-            
-            link.like.count++;
-            link.like.users.push(userId);
-            replyInlineButton(bot, link, msg);
-             
-            console.log("ENTROU NO LIKE 2 ENVIO DE LINKS " + msg);
-          var temp = {};
-          temp['chatId'] = msg.message.chat.id;
-          temp['messageId'] = msg.message.message_id - 1;
-          temp['member'] = msg.message.from,
-          temp['link'] = link.link;
-          temp['like'] = link.like.count;
-          temp['dislike'] = link.dislike.count;
-        
-          var body = JSON.stringify(temp);
-          var request = new http.ClientRequest({
-            hostname: conecao,
-            path: "/app/link",
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Content-Length": Buffer.byteLength(body)
-            }
-          });
-        
-          request.end(body);
-          request.on('response', function (response) {
-            console.log('STATUS: ' + response.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(response.headers));
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              console.log('BODY: ' + chunk);
-            });
-          });
-
             bot.answerCallbackQuery(msg.id, 
-            'Voce curtiu o link do ' + user.first_name);
+            'Voce ja descurtiu o link do' + user.first_name);
           }
-        }else{
-          bot.answerCallbackQuery(msg.id, 
-          'Voce ja curtiu o link do ' + user.first_name);
-        }
-      });
-    }
+        });
         
+      }else if (data === 'like'){
+        linkController.findByMessageAndChat(msg.message.message_id - 1,
+          msg.message.chat.id, function(link){
+          if(!containsObject(userId, link.like.users)){
+            if(!containsObject(userId, link.dislike.users)){
+              link.like.count++;
+              link.like.users.push(userId);
+              
+              replyInlineButton(bot, link, msg);
+               console.log()
+              console.log("ENTROU NO LIKE ENVIO DE LINKS " + msg);
+            var temp = {};
+            temp['chatId'] = msg.message.chat.id;
+            temp['messageId'] = msg.message.message_id - 1;
+            temp['member'] = msg.message.from,
+            temp['link'] = link.link;
+            temp['like'] = link.like.count;
+            temp['dislike'] = link.dislike.count;
+          
+            var body = JSON.stringify(temp);
+            var request = new http.ClientRequest({
+              hostname: conecao,
+              path: "/app/link",
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Content-Length": Buffer.byteLength(body)
+              }
+            });
+          
+            request.end(body);
+            request.on('response', function (response) {
+              console.log('STATUS: ' + response.statusCode);
+              console.log('HEADERS: ' + JSON.stringify(response.headers));
+              response.setEncoding('utf8');
+              response.on('data', function (chunk) {
+                console.log('BODY: ' + chunk);
+              });
+            });
+  
+              bot.answerCallbackQuery(msg.id, 
+              'Voce curtiu o link do ' + user.first_name);
+            }else{
+              link.dislike.count--;
+              var index = link.dislike.users.indexOf(userId);
+              link.dislike.users.splice(index, 1);
+              
+              link.like.count++;
+              link.like.users.push(userId);
+              replyInlineButton(bot, link, msg);
+               
+              console.log("ENTROU NO LIKE 2 ENVIO DE LINKS " + msg);
+            var temp = {};
+            temp['chatId'] = msg.message.chat.id;
+            temp['messageId'] = msg.message.message_id - 1;
+            temp['member'] = msg.message.from,
+            temp['link'] = link.link;
+            temp['like'] = link.like.count;
+            temp['dislike'] = link.dislike.count;
+          
+            var body = JSON.stringify(temp);
+            var request = new http.ClientRequest({
+              hostname: conecao,
+              path: "/app/link",
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Content-Length": Buffer.byteLength(body)
+              }
+            });
+          
+            request.end(body);
+            request.on('response', function (response) {
+              console.log('STATUS: ' + response.statusCode);
+              console.log('HEADERS: ' + JSON.stringify(response.headers));
+              response.setEncoding('utf8');
+              response.on('data', function (chunk) {
+                console.log('BODY: ' + chunk);
+              });
+            });
+  
+              bot.answerCallbackQuery(msg.id, 
+              'Voce curtiu o link do ' + user.first_name);
+            }
+          }else{
+            bot.answerCallbackQuery(msg.id, 
+            'Voce ja curtiu o link do ' + user.first_name);
+          }
+        });
+      }
+        
+    }else if (data === 'categoria' || data === 'descricao'){
+      if(data === 'categoria'){
+        bot.sendMessage(msg.message.chat.id, 'Digite a categoria do grupo');
+        configCategory = true;
+      }else if(data === 'descricao'){
+        bot.sendMessage(msg.message.chat.id, 'Digite a descricao do grupo');
+        configDescription = true;
+      }
     }
   }
 });
