@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 var Link = require('../models/link');
 
 exports.addLink = function(msg){
-  console.log("CALLBACK: " + msg);
+  console.log("CALLBACK: " + JSON.stringify(msg));
   return new Promise((resolve, reject) => {
     var resp = {};
       var user = msg.from;
@@ -78,6 +78,7 @@ exports.addLink = function(msg){
           }
         });
       }
+      console.log("RESP DEPOIS >>>: " + JSON.stringify(resp));
       return resolve(resp);
   });
 };
