@@ -125,6 +125,7 @@ bot.on('callback_query', function(msg) {
   if(msg.data){
     if(msg.data === 'like' || msg.data === 'dislike'){
       var resp = linkController.addLink(msg);
+      console.log(">>>>>>resposta: " + resp);
       if(resp.needReply === 1)
         replyInlineButton(bot, resp.link, resp.msg)
       bot.answerCallbackQuery(resp.id, resp.data);
