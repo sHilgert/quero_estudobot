@@ -230,9 +230,12 @@ bot.on('callback_query', function(msg) {
   console.log("ENTROU 1 >>> " + msg);
   if(msg.data){
     console.log("ENTROU 2 >>> " + msg);
-    if(msg.data === 'like' || msg.data === 'dislike'){
-       var user = msg.from;
+    var user = msg.from;
     var userId = {userId: user.id};
+    var data = msg.data;
+    if(data === 'like' || data === 'dislike'){
+    console.log("ENTROU asasasas2 >>> " + msg);
+    console.log("ENTROU LINKS >>> " + msg);
     var data = msg.data;
     if(data === 'dislike'){
       console.log("ENTROU 3 >>> " + msg);
