@@ -92,7 +92,7 @@ bot.onText(/new/, function(msg){
   
   var body = JSON.stringify(msg.chat); 
   var request = new http.ClientRequest({
-    hostname: 'ed4f0e70.ngrok.io',
+    hostname: '14c83884.ngrok.io',
     path: "/app/chat",
     method: "POST",
     headers: {
