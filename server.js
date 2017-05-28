@@ -2,7 +2,6 @@
 var http = require('http');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-var request = require('request');
 
 // Controllers
 const linkController = require('./controllers/linkController');
@@ -100,31 +99,29 @@ bot.onText(/all/, function (msg) {
     });
 });
 
-bot.onText(/newGroup/, function(msg){
+bot.onText(/new/, function(msg){
   console.log("ENTROU 1");
   
-  // Configure the request
-  var options = {
-      url: 'http://9385428b.ngrok.io/app/chat',
-      method: 'POST',
-      json: true,
-      headers: {
-        'Content-Type':     'application/json'
-      },
-      body: JSON.stringify(msg.chat)
-  }
-  console.log("fez o options");
-  // Start the request
-  request(options, function (error, response, body) {
-      console.log("Entrou na function de response");
-      if (!error && response.statusCode == 200) {
-          // Print out the response body
-          console.log(body)
-      }else{
-        console.log(">>>erro: " + error);
-      }
-      
-  })
+  var body = JSON.stringify(msg.chat); 
+  var request = new http.ClientRequest({
+    hostname: '9385428b.ngrok.io',
+    path: "/app/chat",
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body)
+    }
+  });
+
+  request.end(body);
+  request.on('response', function (response) {
+    console.log('STATUS: ' + response.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(response.headers));
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+  });
 });
 
 bot.onText(/links/, function (msg) {
