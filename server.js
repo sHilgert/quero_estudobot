@@ -227,19 +227,23 @@ bot.onText(/new/, function(msg){
 });
 
 bot.on('callback_query', function(msg) {
+  console.log("ENTROU 1 >>> " + msg);
   if(msg.data){
+    console.log("ENTROU 2 >>> " + msg);
     if(msg.data === 'like' || msg.data === 'dislike'){
        var user = msg.from;
     var userId = {userId: user.id};
     var data = msg.data;
     if(data === 'dislike'){
+      console.log("ENTROU 3 >>> " + msg);
       linkController.findByMessageAndChat(msg.message.message_id - 1,
         msg.message.chat.id, function(link){
+          console.log("ENTROU 4 >>> " + link);
         if(!containsObject(userId, link.dislike.users)){
           if(!containsObject(userId, link.like.users)){
             link.dislike.count++;
             link.dislike.users.push(userId);
-            
+            console.log("ENTROU 5 >>> " + link);
             replyInlineButton(bot, link, msg);  
 
             bot.answerCallbackQuery(msg.id, 
