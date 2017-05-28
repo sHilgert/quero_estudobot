@@ -3,7 +3,7 @@ var http = require('http');
 var bayes = require('bayes')
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-const greeetingResp = "Oi!";
+const greetingResp = "Oi!";
 const helpResp = "Ola, estou vendo que voce precisa de ajuda. Para utilizar minhas funcionalidades é so me add no grupo! Eu consigo gerenciar os links enviados e disponibilizar pro pessoal dar aquela curtida ou quem sabe descurtir.";
 
 
@@ -52,11 +52,11 @@ var conecao = '14c83884.ngrok.io';
 //Naive Bayes
 var classifier = bayes()
 
-classifier.learn('oi, e ae, ola, eai, eae, fala ae', 'greeeting');
-classifier.learn('oi', 'greeeting');
-classifier.learn('e ae', 'greeeting');
-classifier.learn('fala ae', 'greeeting');
-classifier.learn('ola', 'greeeting');
+classifier.learn('oi, e ae, ola, eai, eae, fala ae', 'greeting');
+classifier.learn('oi', 'greeting');
+classifier.learn('e ae', 'greeting');
+classifier.learn('fala ae', 'greeting');
+classifier.learn('ola', 'greeting');
 
 
 classifier.learn('ajuda, help, como usar, comandos, usabilidade, nao sei usar', 'help');
@@ -73,8 +73,8 @@ bot.on('message', (msg) => {
     console.log(categorization);
     if(categorization === 'help'){
        bot.sendMessage(chatId, helpResp);
-    }else if (categorization === 'greeting'){
-      bot.sendMessage(chatId, greeetingResp);
+    }else if (categorization === 'greeting' || categorization === 'greeeting'){
+      bot.sendMessage(chatId, greetingResp);
     }else{
       bot.sendMessage(chatId,"Desculpe nao consegui entender o que voce quis dizer");
     }
