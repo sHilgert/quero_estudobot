@@ -24,7 +24,7 @@ exports.addLink = function(msg, res){
               resp['needReply'] = 1;
               resp['link'] = link;
               resp['msg'] = msg;
-              resp['id'] = msg.id;
+              resp['id'] = link.id;
               resp['data'] = 'You disliked ' + user.first_name + ' link';
               console.log(">>>>>>resposta3: " + JSON.stringify(resp));
             }else{
